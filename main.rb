@@ -21,11 +21,40 @@ get '/' do
      dates<<record['post_date']
      end
 
-     put = array[1]
-     date = dates[1]
+     put = array[0]
+     date = dates[0]
 
 
      html = markdown.render(put)
 
   "#{date}#{html}"
+end
+
+
+get '/oldpost/:number' do
+
+   number = params[:number]
+   
+   "#{date}#{html}"
+end
+
+
+get '/post' do
+
+erb :post
+
+end
+
+post '/submit' do
+
+  @password = params[:password]
+
+     @title = params[:title]
+     @content = params[:content]
+
+     connection = PG::connect(:host => "localhost", :user => "postgres", :password => "takahama0613", :dbname => "blog",:port=>"5432")
+
+     result = connection.exec("INSERT INTO blogs VALUES('#{@title}','#{@content}',current_date,current_time(0))")
+     "データベースに追記しました。"
+
 end
