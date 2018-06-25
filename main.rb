@@ -60,14 +60,12 @@ end
 
 
 get '/post' do
-
-erb :post
-
+  erb :post
 end
 
 post '/submit' do
 
-  @password = params[:password]
+     @password = params[:password]
 
      @title = params[:title]
      @content = params[:content]
@@ -77,4 +75,6 @@ post '/submit' do
      result = connection.exec("INSERT INTO blogs VALUES('#{@title}','#{@content}',current_date,current_time(0))")
      "データベースに追記しました。"
 
+     sleep 5
+     redirect'/'
 end

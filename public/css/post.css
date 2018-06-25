@@ -1,0 +1,20 @@
+header{
+  height: 40px;
+  background-color: black;
+}
+
+form{
+  margin:20px;
+  border-color: black;
+  border-style: solid;
+  border-width: 5px;
+  padding: 30px;
+}
+
+h3{
+  margin: 10px;
+}
+
+#exampleInputPassword1{
+  width:30%;
+}
