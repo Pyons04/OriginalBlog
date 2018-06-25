@@ -1,0 +1,56 @@
+<html>
+ <head>
+   <meta charset="utf-8">
+    <title>作業ログ</title>
+   <link rel="stylesheet" href="/css/normalize.css">
+   <link rel="stylesheet" href="/css/styles.css">
+ </head>
+
+
+<body>
+    <header id="choice">
+      <a id="link_to_post" href="/post"> 記事を書く </a>
+    </header>
+
+  <main>
+    <div id="title">
+      title
+    </div>
+
+    <div id="content">
+      <div id="blog">
+        <div id="blog1">
+           <center> <div class="date"> <%= @date %> </div> </center>
+           <center> <h1> <%= @title %> </h1> </center>
+
+           <%= @html %>
+        </div>
+
+        <div id="blog2">
+           <center> <div class="date"> <%= @date %> </div> </center>
+           <center> <h1> <%= @title %> </h1> </center>
+
+           <%= @html %>
+        </div>
+
+
+        <div id="blog3">
+          <center> <div class="date"> <%= @date %> </div> </center>
+          <center> <h1> <%= @title %> </h1> </center>
+
+          <%= @html %>
+        </div>
+      </div>
+
+      <div id="sidebar">
+        Sidebar
+      </div>
+    </main>
+
+   <footer>
+     footer
+   </footer>
+
+</body>
+
+</html>
