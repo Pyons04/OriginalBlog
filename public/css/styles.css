@@ -1,6 +1,21 @@
 header{
   height: 40px;
-  background-color: black;
+  background-color: white;
+  margin-right:30px;
+  margin-top: 10px;
+  overflow: hidden;
+}
+
+header > a{
+  float :right;
+
+}
+
+.logo{
+  font-size: 25px;
+  margin-left: 40px;
+  float: left;
+  font-style: bold;
 }
 
 main{
@@ -8,9 +23,22 @@ main{
   margin-right: 15%;
 }
 
+
+
 #title{
   height: 120px;
-  background-color: red;
+  margin-top: 70px;
+  text-align: center;
+  font-size: 30px;
+}
+
+a{
+  text-decoration: none;
+}
+
+.subtitle{
+  color: gray;
+  font-size:15px;
 }
 
 #content{
@@ -21,38 +49,75 @@ main{
 .date{
   margin:10px;
   margin-top: 10px;
+  color: gray;
+}
+
+h1{
+  opacity: 0.8;
+  font-size:20px;
+  color:#47a89c;
 }
 
 #blog{
   float:left;
-  background-color:yellow;
+  background-color:white;
   width:80%;
   padding:20px;
 }
 
 #blog1{
   margin-top: 70px;
+  margin-bottom: 150px;
 }
 
 #blog2{
   margin-top: 70px;
+  margin-bottom: 150px;
 }
 #blog3{
   margin-top: 70px;
+  margin-bottom: 150px;
 }
 
 #time{
    text-align: right;
+   margin-top:70px;
+   margin-right: 20px;
 }
 
 #sidebar{
   float:right;
-  background-color: orange;
+  background-color: white;
   width: 20%;
 }
 
+#id{
+  text-align: center;
+  margin:10px;
+}
+
+.person_img {
+  padding:10px;
+}
+
+#description{
+  color:gray;
+}
+
+.person_info {
+  float: right;
+}
+
+.icon{
+  border-radius: 50%; 
+  border-color: white;
+  border-width: 5px;
+  border-style: solid;
+  box-shadow: 0px 0px 15px gray;
+}
+
 footer{
-  background-color: gray;
+  background-color: #f1f1f1;
   height: 100px;
 }
 
