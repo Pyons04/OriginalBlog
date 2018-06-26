@@ -139,10 +139,20 @@ post '/submit' do
      @content = params[:content]
 
      connection = PG::connect(:host => "localhost", :user => "postgres", :password => "takahama0613", :dbname => "blog",:port=>"5432")
+     result = connection.exec("SELECT * FROM blogs")
 
-     result = connection.exec("INSERT INTO blogs VALUES('#{@title}','#{@content}',current_date,current_time(0))")
-     "データベースに追記しました。"
+     # データベースへのコネクションを切断する
+     ids = []
+     result.each do |record|
+     ids<<record['id']
+     end
+     latest_id = ids.max.to_i
 
-     sleep 5
+     @id = latest_id+1
+
+
+     result = connection.exec("INSERT INTO blogs VALUES('#{@title}','#{@content}',current_date,current_time(0),'#{@id.to_i}')")
+
+
      redirect'/'
 end
