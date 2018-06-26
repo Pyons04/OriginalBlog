@@ -31,20 +31,32 @@ get '/' do
      second_id = latest_id - 1 #なぜかlatest_idがstringになってしまっているため、Integerに戻さないと計算できない。（バグ）
      second_blog = result.select{|records| records['id'] == second_id.to_s}.first
 
-     binding.pry
-
+   unless second_blog.nil? then
      @html2 = markdown.render(second_blog['content'])
      @title2 = second_blog['title']
      @date2 = second_blog['post_date']
      @time2 = second_blog['post_time']
+   end
+
 
      third_id = latest_id - 2
      third_blog = result.select{|records| records['id'] == third_id.to_s}.first
 
+   unless second_blog.nil? then
      @html3 = markdown.render(third_blog['content'])
      @title3 = third_blog['title']
      @date3 = third_blog['post_date']
      @time3 = third_blog['post_time']
+   end
+
+   fourth_id = latest_id - 3
+   fourth_blog = result.select{|records| records['id'] == fourth_id.to_s}.first
+
+    @backnumber_link = false
+
+    unless fourth_blog.nil? then
+        @backnumber_link = true
+    end
 
     erb :home
 end
