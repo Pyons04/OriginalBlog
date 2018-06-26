@@ -1,6 +1,8 @@
 require 'sinatra'
 require 'pg'
 require 'redcarpet'
+require 'pry'
+require 'rails'
 
 
 markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML, autolink: true, tables: true)
@@ -13,20 +15,36 @@ get '/' do
      # データベースへのコネクションを切断する
      connection.finish
 
-     array = []
-     dates = []
-     titles = []
-     #データベースの内容を配列に収納
+     ids = []
      result.each do |record|
-     array<<record['content']
-     dates<<record['post_date']
-     titles<<record['title']
+     ids<<record['id']
      end
+     latest_id = ids.max.to_i
 
-     put = array[0]
-     @html = markdown.render(put)
-     @title = titles[0]
-     @date = dates[0]
+     latest_blog = result.select{|records| records['id'] == latest_id.to_s}.first
+
+     @html = markdown.render(latest_blog['content'])
+     @title = latest_blog['title']
+     @date = latest_blog['post_date']
+     @time = latest_blog['post_time']
+
+     second_id = latest_id - 1 #なぜかlatest_idがstringになってしまっているため、Integerに戻さないと計算できない。（バグ）
+     second_blog = result.select{|records| records['id'] == second_id.to_s}.first
+
+     binding.pry
+
+     @html2 = markdown.render(second_blog['content'])
+     @title2 = second_blog['title']
+     @date2 = second_blog['post_date']
+     @time2 = second_blog['post_time']
+
+     third_id = latest_id - 2
+     third_blog = result.select{|records| records['id'] == third_id.to_s}.first
+
+     @html3 = markdown.render(third_blog['content'])
+     @title3 = third_blog['title']
+     @date3 = third_blog['post_date']
+     @time3 = third_blog['post_time']
 
     erb :home
 end

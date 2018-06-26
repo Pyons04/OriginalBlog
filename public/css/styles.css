@@ -41,6 +41,10 @@ main{
   margin-top: 70px;
 }
 
+#time{
+   text-align: right;
+}
+
 #sidebar{
   float:right;
   background-color: orange;
