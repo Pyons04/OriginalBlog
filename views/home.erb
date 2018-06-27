@@ -1,7 +1,7 @@
 <html>
  <head>
    <meta charset="utf-8">
-    <title>忘備録</title>
+    <title>備忘録</title>
    <link rel="stylesheet" href="/css/normalize.css">
    <link rel="stylesheet" href="/css/styles.css">
  </head>
@@ -16,6 +16,7 @@
     <div id="title">
       備忘録<br><span class="subtitle">Since 2018<br>主に技術関連</span>
     </div>
+
 
     <div id="content">
       <div id="blog">
@@ -62,7 +63,7 @@
                 <img src="/img/pyons.jpg" width="80" height="80" class="icon">
           </div>
           <br><span id="name">Pyons</span>
-          <br><div id="description">私大文系エンジニア。Pascalを使ったことがある22歳。<br>Ruby歴:1年</div>
+          <br><div id="description">20卒私大文系エンジニア。Pascalを使ったことがある22歳。<br>Ruby歴:1年</div>
         </div>
       </div>
     </main>
@@ -70,6 +71,14 @@
    <footer>
      footer
    </footer>
+
+   <%if @status == "cancel"  %>
+         <script>window.alert('編集はキャンセルされました。');</script>
+   <%elsif @status == "deleted"  %>
+         <script>window.alert('投稿は削除されました。');</script>
+   <%elsif @status == "deleted"  %>
+         <script>window.alert('投稿が完了しました。');</script>
+   <% end %>
 
 </body>
 
