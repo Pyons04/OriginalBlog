@@ -1,7 +1,7 @@
 <html>
  <head>
    <meta charset="utf-8">
-    <title>作業ログ</title>
+    <title>忘備録</title>
    <link rel="stylesheet" href="/css/normalize.css">
    <link rel="stylesheet" href="/css/styles.css">
  </head>
@@ -14,19 +14,19 @@
 
   <main>
     <div id="title">
-      忘備録<br><span class="subtitle">Since 2018<br>Written by Pyons</span>
+      備忘録<br><span class="subtitle">Since 2018<br>主に技術関連</span>
     </div>
 
     <div id="content">
       <div id="blog">
         <div id="blog1">
-           <div id="button"><div id="edit">編集</div></div><br>
+           <div id="button"><a href="/edit/<%= @id %>"><div id="edit">編集</div></a></div><br>
 
            <center> <div class="date"> <%= @date %> </div> </center>
            <center> <h1> <%= @title %> </h1> </center>
 
            <%= @html %>
-           <div id="time"><%= @time %><br>Written by Pyons</div>
+           <div id="time">Posted Time <%= @time %></div>
         </div>
 
         <div id="blog2">
@@ -36,18 +36,18 @@
            <center> <h1> <%= @title2 %> </h1> </center>
 
            <%= @html2 %>
-           <div id="time"><%= @time2 %><br>Written by Pyons</div>
+           <div id="time">Posted Time <%= @time %></div>
         </div>
 
 
         <div id="blog3">
           <div id="button"><div id="edit">編集</div></div><br>
-          
+
           <center> <div class="date"> <%= @date3 %> </div> </center>
           <center> <h1> <%= @title3 %> </h1> </center>
 
           <%= @html3 %>
-          <div id="time"><%= @time3 %><br>Written by Pyons</div>
+          <div id="time">Posted Time <%= @time %></div>
         </div>
 
         <% if @backnumber_link == true %>

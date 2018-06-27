@@ -27,6 +27,7 @@ get '/' do
      @title = latest_blog['title']
      @date = latest_blog['post_date']
      @time = latest_blog['post_time']
+     @id   = latest_blog['id']
 
      second_id = latest_id - 1 #なぜかlatest_idがstringになってしまっているため、Integerに戻さないと計算できない。（バグ）
      second_blog = result.select{|records| records['id'] == second_id.to_s}.first
@@ -36,6 +37,7 @@ get '/' do
      @title2 = second_blog['title']
      @date2 = second_blog['post_date']
      @time2 = second_blog['post_time']
+     @id2   = second_blog['id']
    end
 
 
@@ -47,6 +49,7 @@ get '/' do
      @title3 = third_blog['title']
      @date3 = third_blog['post_date']
      @time3 = third_blog['post_time']
+     @id3   = third_blog['id']
    end
 
    fourth_id = latest_id - 3
@@ -87,6 +90,7 @@ get '/oldpost/:number' do
      @title = latest_blog['title']
      @date = latest_blog['post_date']
      @time = latest_blog['post_time']
+     @id   = latest_blog['id']
 
      second_id = latest_id - 1 #なぜかlatest_idがstringになってしまっているため、Integerに戻さないと計算できない。（バグ）
      second_blog = result.select{|records| records['id'] == second_id.to_s}.first
@@ -97,6 +101,8 @@ get '/oldpost/:number' do
      @title2 = second_blog['title']
      @date2 = second_blog['post_date']
      @time2 = second_blog['post_time']
+     @id2   = second_blog['id']
+
    end
 
 
@@ -108,6 +114,8 @@ get '/oldpost/:number' do
      @title3 = third_blog['title']
      @date3 = third_blog['post_date']
      @time3 = third_blog['post_time']
+     @id3   = third_blog['id']
+
    end
 
    fourth_id = latest_id - 3
@@ -126,15 +134,35 @@ get '/oldpost/:number' do
 
 end
 
+get '/edit/:id' do
+  id = params[:id]
+
+  connection = PG::connect(:host => "localhost", :user => "postgres", :password => "takahama0613", :dbname => "blog",:port=>"5432")
+   result = connection.exec("SELECT * FROM blogs")
+
+     # データベースへのコネクションを切断する
+   connection.finish
+   edit_blog = result.select{|records| records['id'] == id.to_s}.first
+
+   @edit = true  #editと新規投稿は同じhtmlを用いるので判別用にbooleanの変数をviewに送っておく。
+   @html = edit_blog['content']
+   @title = edit_blog['title']
+   @date = edit_blog['post_date']
+   @time = edit_blog['post_time']
+   @id   = edit_blog['id']
+
+   erb :post
+end
+
 
 get '/post' do
+  @edit = false #editと新規投稿は同じhtmlを用いるので判別用にbooleanの変数をviewに送っておく。
   erb :post
 end
 
 post '/submit' do
 
      @password = params[:password]
-
      @title = params[:title]
      @content = params[:content]
 

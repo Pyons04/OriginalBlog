@@ -32,3 +32,15 @@ h3{
 #exampleInputPassword1{
   width:30%;
 }
+
+#buttons{
+  overflow: hidden;
+}
+
+.btn-primary{
+  float:right;
+}
+
+.btn-danger{
+  float:left;
+}

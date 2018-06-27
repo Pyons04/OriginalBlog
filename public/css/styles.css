@@ -63,13 +63,13 @@ h1{
   width:80%;
   padding:20px;
 }
+
 #button{
   float:right;
-  margin-right: 80px;
 }
 
 #edit{
-  opacity:0.4;
+  opacity:0.3;
   font-size: 17px;
   border-color: gray;
   border-style: solid;
