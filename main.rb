@@ -18,7 +18,7 @@ get '/oldpost/:number' do
 
      ids = []
      result.each do |record|
-     ids<<record['id']
+     ids<<record['id'].to_i
      end
 
 
@@ -97,6 +97,12 @@ get '/edit/:id' do
 end
 
 
+post '/reedit' do
+
+
+end
+
+
 get '/post' do
   @edit = false #editと新規投稿は同じhtmlを用いるので判別用にbooleanの変数をviewに送っておく。
   erb :post
@@ -114,14 +120,15 @@ post '/submit' do
      # データベースへのコネクションを切断する
      ids = []
      result.each do |record|
-     ids<<record['id']
+     ids<<record['id'].to_i
      end
-     latest_id = ids.max.to_i
 
-     @id = latest_id+1
+     latest_id = ids.max
+
+     @new_id = latest_id+1
 
 
-     result = connection.exec("INSERT INTO blogs VALUES('#{@title}','#{@content}',current_date,current_time(0),'#{@id.to_i}')")
+     result = connection.exec("INSERT INTO blogs VALUES('#{@title}','#{@content}',current_date,current_time(0),'#{@new_id.to_i}')")
 
 
      redirect'/posted'
@@ -145,9 +152,9 @@ get '/*' do
 
      ids = []
      result.each do |record|
-     ids<<record['id']
+     ids<<record['id'].to_i
      end
-     latest_id = ids.max.to_i
+     latest_id = ids.max
 
      latest_blog = result.select{|records| records['id'] == latest_id.to_s}.first
 

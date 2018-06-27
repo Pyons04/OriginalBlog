@@ -13,7 +13,13 @@
         <span class="logo">Pyons Tech Blog</span>
     </header>
 
-     <form action="submit" method="POST">
+     <%if @edit == true  %>
+        <form action="/reedit" method="POST"><!-- 編集画面として用いる場合はSubmitボタンのルーティングををreeditにしておく-->
+     <% elsif @edit== false %>
+        <form action="/submit" method="POST"><!-- 新規投稿画面として用いる場合はSubmitボタンのルーティングをsubmitにしておく-->
+     <% end %>
+
+
      <div id="close"><a href="/cancel">閉じる</a></div>
      <h3>記事を
       <%if @edit == true  %>編集する
@@ -48,7 +54,6 @@
     <%if @edit == true  %>
        <button type="delete" class="btn btn-danger">Detele</button>
     <% end %>
-
        <button type="submit" class="btn btn-primary">Submit</button>
    </div>
 

@@ -31,7 +31,7 @@
         </div>
 
         <div id="blog2">
-          <div id="button"><div id="edit">編集</div></div><br>
+          <div id="button"><a href="/edit/<%= @id %>"><div id="edit">編集</div></a></div><br>
 
            <center> <div class="date"> <%= @date2 %> </div> </center>
            <center> <h1> <%= @title2 %> </h1> </center>
@@ -42,7 +42,7 @@
 
 
         <div id="blog3">
-          <div id="button"><div id="edit">編集</div></div><br>
+          <div id="button"><a href="/edit/<%= @id %>"><div id="edit">編集</div></a></div><br>
 
           <center> <div class="date"> <%= @date3 %> </div> </center>
           <center> <h1> <%= @title3 %> </h1> </center>
@@ -76,7 +76,7 @@
          <script>window.alert('編集はキャンセルされました。');</script>
    <%elsif @status == "deleted"  %>
          <script>window.alert('投稿は削除されました。');</script>
-   <%elsif @status == "deleted"  %>
+   <%elsif @status == "posted"  %>
          <script>window.alert('投稿が完了しました。');</script>
    <% end %>
 
