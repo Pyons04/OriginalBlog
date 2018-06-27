@@ -97,9 +97,17 @@ get '/edit/:id' do
 end
 
 
-post '/reedit' do
+post '/resubmit/:id' do
+     id = params[:id]
+"ここでpost viewから送られてきたidのレコードを削除し、同じidで再インサートする。 編集するレコードのidは#{id}"
+     @password = params[:password]
+     @title = params[:title]
+     @content = params[:content]
 
+     connection = PG::connect(:host => "localhost", :user => "postgres", :password => "takahama0613", :dbname => "blog",:port=>"5432")
+     result = connection.exec("DELETE FROM blogs WHERE id =#{id.to_i}")#パラメータのidを持つレコードを削除
 
+     result = connection.exec("INSERT INTO blogs VALUES('#{@title}','#{@content}',current_date,current_time(0),'#{id.to_i}')")#タイトルなどを入れなおして再インサート
 end
 
 

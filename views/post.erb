@@ -14,7 +14,7 @@
     </header>
 
      <%if @edit == true  %>
-        <form action="/reedit" method="POST"><!-- 編集画面として用いる場合はSubmitボタンのルーティングををreeditにしておく-->
+        <form action="/resubmit/<%= @id %>" method="POST"><!-- 編集画面として用いる場合はSubmitボタンのルーティングををresubmitにしておく-->
      <% elsif @edit== false %>
         <form action="/submit" method="POST"><!-- 新規投稿画面として用いる場合はSubmitボタンのルーティングをsubmitにしておく-->
      <% end %>
