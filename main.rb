@@ -57,7 +57,7 @@ end
      @time2 = second_blog['post_time']
      @id2   = second_blog['id']
 
-     unless second_id == smallest_id then#この記事のidがデータベースで一番大きければ検索はやめる。
+     unless second_id == smallest_id or second_id == nil then#この記事のidがデータベースで一番大きければ検索はやめる。
 
         third_id = second_id - 1
         third_blog = result.select{|records| records['id'] == third_id.to_s}.first
@@ -80,7 +80,10 @@ end
      @id3   = third_blog['id']
    end
 
-   unless third_id == smallest_id then #この記事のidがデータベースで一番大きければ検索はやめる。
+   @backnumber_link = false
+
+
+   unless third_id == smallest_id or third_id == nil then #この記事のidがデータベースで一番大きければ検索はやめる。
 
        fourth_id = third_id.to_i - 1
        fourth_blog = result.select{|records| records['id'] == fourth_id.to_s}.first
@@ -89,14 +92,11 @@ end
          fourth_id = fourth_id - 1
          fourth_blog = result.select{|records| records['id'] == fourth_id.to_s}.first
       end
+
+      @backnumber_link = true
+      @link = "/oldpost/#{fourth_id}"
+
    end
-
-       @backnumber_link = false
-
-       unless fourth_blog.nil? then
-          @backnumber_link = true
-          @link = "/oldpost/#{fourth_id}"
-       end
 
     erb :home
 end
