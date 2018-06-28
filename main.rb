@@ -16,14 +16,7 @@ get '/oldpost/:number' do
      # データベースへのコネクションを切断する
      connection.finish
 
-     ids = []
-     result.each do |record|
-     ids<<record['id'].to_i
-     end
-
-
-     param = params[:number].to_i*3
-     latest_id = ids.max.to_i - param  #最新の記事のidから3つ前のidの記事を持ってくる,2ページ目以降はパラメータの値*3つ分古い記事を持ってくる。
+     latest_id = params[:number].to_i #urlに組み込んだパラメータが次のページの最初の記事のidになっている。
 
   unless latest_id.nil? then
      latest_blog = result.select{|records| records['id'] == latest_id.to_s}.first
@@ -36,7 +29,14 @@ get '/oldpost/:number' do
 
      second_id = latest_id - 1 #なぜかlatest_idがstringになってしまっているため、Integerに戻さないと計算できない。（バグ）
      second_blog = result.select{|records| records['id'] == second_id.to_s}.first
+
+     while second_blog == nil do
+      second_id = second_id - 1
+      second_blog = result.select{|records| records['id'] == second_id.to_s}.first
+     end
+
   end
+
 
    unless second_blog.nil? then
      @html2 = markdown.render(second_blog['content'])
@@ -45,38 +45,45 @@ get '/oldpost/:number' do
      @time2 = second_blog['post_time']
      @id2   = second_blog['id']
 
+     third_id = second_id - 1
+     third_blog = result.select{|records| records['id'] == third_id.to_s}.first
+
+     while third_blog == nil do
+      third_id = third_id - 1
+      third_blog = result.select{|records| records['id'] == third_id.to_s}.first
+     end
+
    end
 
 
-     third_id = latest_id - 2
-     third_blog = result.select{|records| records['id'] == third_id.to_s}.first
-
-   unless second_blog.nil? then
+   unless third_blog.nil? then
      @html3 = markdown.render(third_blog['content'])
      @title3 = third_blog['title']
      @date3 = third_blog['post_date']
      @time3 = third_blog['post_time']
      @id3   = third_blog['id']
-
    end
 
-   fourth_id = latest_id - 3
+   fourth_id = third_id - 1
    fourth_blog = result.select{|records| records['id'] == fourth_id.to_s}.first
+
+   while fourth_blog == nil do
+      fourth_id = fourth_id - 1
+      fourth_blog = result.select{|records| records['id'] == fourth_id.to_s}.first
+   end
 
     @backnumber_link = false
 
     unless fourth_blog.nil? then
         @backnumber_link = true
-        link = params[:number].to_i+1
-        @link = "/oldpost/#{link}"
+        @link = "/oldpost/#{fourth_id}"
     end
 
     erb :home
-
-
 end
 
 get '/edit/:id' do
+
   id = params[:id]
 
   connection = PG::connect(:host => "localhost", :user => "postgres", :password => "takahama0613", :dbname => "blog",:port=>"5432")
@@ -98,8 +105,9 @@ end
 
 
 post '/resubmit/:id' do
+
+     delete = params[:Delete]
      id = params[:id]
-"ここでpost viewから送られてきたidのレコードを削除し、同じidで再インサートする。 編集するレコードのidは#{id}"
      @password = params[:password]
      @title = params[:title]
      @content = params[:content]
@@ -107,7 +115,12 @@ post '/resubmit/:id' do
      connection = PG::connect(:host => "localhost", :user => "postgres", :password => "takahama0613", :dbname => "blog",:port=>"5432")
      result = connection.exec("DELETE FROM blogs WHERE id =#{id.to_i}")#パラメータのidを持つレコードを削除
 
-     result = connection.exec("INSERT INTO blogs VALUES('#{@title}','#{@content}',current_date,current_time(0),'#{id.to_i}')")#タイトルなどを入れなおして再インサート
+    unless params[:delete] == "delete" then
+          result = connection.exec("INSERT INTO blogs VALUES('#{@title}','#{@content}',current_date,current_time(0),'#{id.to_i}')")#タイトルなどを入れなおして再インサート
+     redirect'/posted'
+    end
+     
+     redirect '/deleted'
 end
 
 
@@ -175,6 +188,12 @@ get '/*' do
      second_id = latest_id - 1 #なぜかlatest_idがstringになってしまっているため、Integerに戻さないと計算できない。（バグ）
      second_blog = result.select{|records| records['id'] == second_id.to_s}.first
 
+
+     while second_blog == nil do
+      second_id = second_id - 1
+      second_blog = result.select{|records| records['id'] == second_id.to_s}.first
+     end
+
    unless second_blog.nil? then
      @html2 = markdown.render(second_blog['content'])
      @title2 = second_blog['title']
@@ -184,10 +203,15 @@ get '/*' do
    end
 
 
-     third_id = latest_id - 2
+     third_id = second_id - 1
      third_blog = result.select{|records| records['id'] == third_id.to_s}.first
 
-   unless second_blog.nil? then
+     while third_blog == nil do
+      third_id = third_id - 1
+      third_blog = result.select{|records| records['id'] == third_id.to_s}.first
+     end
+
+   unless third_blog.nil? then
      @html3 = markdown.render(third_blog['content'])
      @title3 = third_blog['title']
      @date3 = third_blog['post_date']
@@ -195,14 +219,19 @@ get '/*' do
      @id3   = third_blog['id']
    end
 
-   fourth_id = latest_id - 3
+   fourth_id = third_id - 1
    fourth_blog = result.select{|records| records['id'] == fourth_id.to_s}.first
 
-    @backnumber_link = false
+    while fourth_blog == nil do
+      fourth_id = fourth_id - 1
+      fourth_blog = result.select{|records| records['id'] == fourth_id.to_s}.first
+    end
+
+   @backnumber_link = false
 
     unless fourth_blog.nil? then
         @backnumber_link = true
-        @link = "/oldpost/1"
+        @link = "/oldpost/#{fourth_id}"
     end
 
     erb :home
