@@ -10,11 +10,18 @@ markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML, autolink: true, tabl
 
 get '/oldpost/:number' do
 
+
     connection = PG::connect(:host => "localhost", :user => "postgres", :password => "takahama0613", :dbname => "blog",:port=>"5432")
-   result = connection.exec("SELECT * FROM blogs")
+    result = connection.exec("SELECT * FROM blogs")
 
      # データベースへのコネクションを切断する
      connection.finish
+
+     ids = []
+     result.each do |record|
+     ids<<record['id'].to_i
+     end
+     smallest_id = ids.min
 
      latest_id = params[:number].to_i #urlに組み込んだパラメータが次のページの最初の記事のidになっている。
 
@@ -27,15 +34,20 @@ get '/oldpost/:number' do
      @time = latest_blog['post_time']
      @id   = latest_blog['id']
 
-     second_id = latest_id - 1 #なぜかlatest_idがstringになってしまっているため、Integerに戻さないと計算できない。（バグ）
-     second_blog = result.select{|records| records['id'] == second_id.to_s}.first
 
-     while second_blog == nil do
-      second_id = second_id - 1
+   unless latest_id == smallest_id then#この記事のidがデータベースで一番小さければ検索はやめる。
+
+      second_id = latest_id - 1
       second_blog = result.select{|records| records['id'] == second_id.to_s}.first
-     end
 
-  end
+      while second_blog == nil do
+        second_id = second_id - 1
+        second_blog = result.select{|records| records['id'] == second_id.to_s}.first
+      end
+
+   end
+
+end
 
 
    unless second_blog.nil? then
@@ -45,12 +57,16 @@ get '/oldpost/:number' do
      @time2 = second_blog['post_time']
      @id2   = second_blog['id']
 
-     third_id = second_id - 1
-     third_blog = result.select{|records| records['id'] == third_id.to_s}.first
+     unless second_id == smallest_id then#この記事のidがデータベースで一番大きければ検索はやめる。
 
-     while third_blog == nil do
-      third_id = third_id - 1
-      third_blog = result.select{|records| records['id'] == third_id.to_s}.first
+        third_id = second_id - 1
+        third_blog = result.select{|records| records['id'] == third_id.to_s}.first
+
+        while third_blog == nil do
+          third_id = third_id - 1
+          third_blog = result.select{|records| records['id'] == third_id.to_s}.first
+        end
+
      end
 
    end
@@ -64,20 +80,23 @@ get '/oldpost/:number' do
      @id3   = third_blog['id']
    end
 
-   fourth_id = third_id - 1
-   fourth_blog = result.select{|records| records['id'] == fourth_id.to_s}.first
+   unless third_id == smallest_id then #この記事のidがデータベースで一番大きければ検索はやめる。
 
-   while fourth_blog == nil do
-      fourth_id = fourth_id - 1
-      fourth_blog = result.select{|records| records['id'] == fourth_id.to_s}.first
+       fourth_id = third_id.to_i - 1
+       fourth_blog = result.select{|records| records['id'] == fourth_id.to_s}.first
+
+      while fourth_blog == nil do
+         fourth_id = fourth_id - 1
+         fourth_blog = result.select{|records| records['id'] == fourth_id.to_s}.first
+      end
    end
 
-    @backnumber_link = false
+       @backnumber_link = false
 
-    unless fourth_blog.nil? then
-        @backnumber_link = true
-        @link = "/oldpost/#{fourth_id}"
-    end
+       unless fourth_blog.nil? then
+          @backnumber_link = true
+          @link = "/oldpost/#{fourth_id}"
+       end
 
     erb :home
 end
