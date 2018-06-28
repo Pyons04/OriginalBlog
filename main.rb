@@ -131,15 +131,26 @@ post '/resubmit/:id' do
      @title = params[:title]
      @content = params[:content]
 
-     connection = PG::connect(:host => "localhost", :user => "postgres", :password => "takahama0613", :dbname => "blog",:port=>"5432")
-     result = connection.exec("DELETE FROM blogs WHERE id =#{id.to_i}")#パラメータのidを持つレコードを削除
+     if @password == "swinhiroki" then
 
-    unless params[:delete] == "delete" then
-          result = connection.exec("INSERT INTO blogs VALUES('#{@title}','#{@content}',current_date,current_time(0),'#{id.to_i}')")#タイトルなどを入れなおして再インサート
-     redirect'/posted'
-    end
-     
-     redirect '/deleted'
+         connection = PG::connect(:host => "localhost", :user => "postgres", :password => "takahama0613", :dbname => "blog",:port=>"5432")
+         result = connection.exec("DELETE FROM blogs WHERE id =#{id.to_i}")#パラメータのidを持つレコードを削除
+
+         unless params[:delete] == "delete" then
+            result = connection.exec("INSERT INTO blogs VALUES('#{@title}','#{@content}',current_date,current_time(0),'#{id.to_i}')")#タイトルなどを入れなおして再インサート
+            redirect'/posted'
+         end
+
+         redirect '/deleted'
+
+     else
+       @incorrect_pw = true
+       @edit = true  #editと新規投稿は同じhtmlを用いるので判別用にbooleanの変数をviewに送っておく。
+       @html = @content
+       @title = @title
+       @id   = params[:id]
+       erb :post
+     end
 end
 
 
@@ -154,24 +165,30 @@ post '/submit' do
      @title = params[:title]
      @content = params[:content]
 
-     connection = PG::connect(:host => "localhost", :user => "postgres", :password => "takahama0613", :dbname => "blog",:port=>"5432")
-     result = connection.exec("SELECT * FROM blogs")
+     if @password == "swinhiroki" then
 
-     # データベースへのコネクションを切断する
-     ids = []
-     result.each do |record|
-     ids<<record['id'].to_i
+         connection = PG::connect(:host => "localhost", :user => "postgres", :password => "takahama0613", :dbname => "blog",:port=>"5432")
+         result = connection.exec("SELECT * FROM blogs")
+
+         # データベースへのコネクションを切断する
+         ids = []
+         result.each do |record|
+           ids<<record['id'].to_i
+         end
+
+         latest_id = ids.max
+         @new_id = latest_id+1
+
+
+         result = connection.exec("INSERT INTO blogs VALUES('#{@title}','#{@content}',current_date,current_time(0),'#{@new_id.to_i}')")
+         redirect'/posted'
+     else
+         @incorrect_pw = true
+         @edit = false  #editと新規投稿は同じhtmlを用いるので判別用にbooleanの変数をviewに送っておく。
+         @html = @content
+         @title = @title
+         erb :post
      end
-
-     latest_id = ids.max
-
-     @new_id = latest_id+1
-
-
-     result = connection.exec("INSERT INTO blogs VALUES('#{@title}','#{@content}',current_date,current_time(0),'#{@new_id.to_i}')")
-
-
-     redirect'/posted'
 end
 
 get '/*' do

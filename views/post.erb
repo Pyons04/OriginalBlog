@@ -28,7 +28,7 @@
     </h3>
 
        <div class="form-group">
-        <%if @edit == true  %>
+        <%if @edit == true  or @incorrect_pw == true%>
          <input type="text" name="title" class="form-control" id="exampleFormControlInput1" placeholder="タイトル" value="<%= @title %>">
 
         <% elsif @edit== false %>
@@ -38,7 +38,7 @@
        </div>
 
        <div class="form-group">
-        <%if @edit == true  %>
+        <%if @edit == true  or @incorrect_pw == true%>
             <textarea class="form-control" id="exampleFormControlTextarea1" rows="10" placeholder="本文(MarkDown Only)" name="content"><%= @html %></textarea>
         <% elsif @edit== false %>
            <textarea class="form-control" id="exampleFormControlTextarea1" rows="10" placeholder="本文(MarkDown Only)" name="content"></textarea>
@@ -58,6 +58,11 @@
    </div>
 
     </form>
+
+
+    <%if @incorrect_pw == true  %>
+         <script>window.alert('パスワードが違います。');</script>
+   <% end %>
    </body>
 
 </html>
