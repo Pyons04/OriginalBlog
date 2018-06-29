@@ -74,10 +74,10 @@
          <script>window.alert('不正なパスワードが入力されています。');</script>
     <% end %>
     <%if @edit == true  %>
-         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js">
+         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
+          <script>
             console.log('default selected');
-           $('select[name="category"] multi').value("Java");
-           $('.form-control').form-control('refresh');
+           $('select[name=category]').val("Java");
          </script>
     <% end %>
    </body>
