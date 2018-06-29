@@ -45,6 +45,16 @@
         <% end %>
        </div>
 
+       <label for="exampleFormControlSelect2">Category</label>
+         <select multiple class="form-control" id="exampleFormControlSelect2" name="category">
+           <option value="未分類">1</option>
+           <option value="Ruby">2</option>
+           <option value="Rails">3</option>
+           <option value="Java">4</option>
+           <option value="Golang">5</option>
+         </select>
+
+
        <div class="form-group">
          <label for="exampleInputPassword1">投稿用パスワード</label>
          <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password">
@@ -61,8 +71,15 @@
 
 
     <%if @incorrect_pw == true  %>
-         <script>window.alert('パスワードが違います。');</script>
-   <% end %>
+         <script>window.alert('不正なパスワードが入力されています。');</script>
+    <% end %>
+    <%if @edit == true  %>
+         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js">
+            console.log('default selected');
+           $('select[name="category"] multi').value("Java");
+           $('.form-control').form-control('refresh');
+         </script>
+    <% end %>
    </body>
 
 </html>
