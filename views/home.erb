@@ -24,34 +24,53 @@
            <%= @category_title %>
         </div>
         <div id="blog1">
+
+          <% unless @html.nil? %>
            <div id="button"><a href="/edit/<%= @id %>"><div id="edit">編集</div></a></div><br>
+          <% end %>
 
            <center> <div class="date"> <%= @date %> </div> </center>
            <center> <h1> <%= @title %> </h1> </center>
 
-           <%= @html %>
-           <div id="time">Posted Time <%= @time %></div>
+             <%= @html %>
+
+           <% unless @html.nil? %>
+             <div id="time">Posted Time <%= @time %></div>
+           <% end %>
+
         </div>
 
         <div id="blog2">
-          <div id="button"><a href="/edit/<%= @id2 %>"><div id="edit">編集</div></a></div><br>
+
+         <% unless @html2.nil? %>
+           <div id="button"><a href="/edit/<%= @id2 %>"><div id="edit">編集</div></a></div><br>
+         <% end %>
 
            <center> <div class="date"> <%= @date2 %> </div> </center>
            <center> <h1> <%= @title2 %> </h1> </center>
 
            <%= @html2 %>
+
+          <% unless @html2.nil? %>
            <div id="time">Posted Time <%= @time2 %></div>
+          <% end %>
         </div>
 
 
         <div id="blog3">
-          <div id="button"><a href="/edit/<%= @id3 %>"><div id="edit">編集</div></a></div><br>
+
+          <% unless @html3.nil? %>
+           <div id="button"><a href="/edit/<%= @id3 %>"><div id="edit">編集</div></a></div><br>
+          <% end %>
 
           <center> <div class="date"> <%= @date3 %> </div> </center>
           <center> <h1> <%= @title3 %> </h1> </center>
 
           <%= @html3 %>
-          <div id="time">Posted Time <%= @time3 %></div>
+
+          <% unless @html3.nil? %>
+             <div id="time">Posted Time <%= @time3 %></div>
+          <% end %>
         </div>
 
         <% if @backnumber_link == true %>
@@ -71,7 +90,11 @@
         <div id="category">
           <div id="category_title">Category<br></div>
             <% @categories_array.each do |category|%>
-              <br><a href="/category/<%= category['id'] %>/0"><%= category['name'] %>(<%= category['count'] %>)</a><br>
+             <% if category['count'].to_i > 0 then %><!--そのカテゴリーの記事数が1以上ならリンクを張る。それ以外は張らない。-->
+                <br><a href="/category/<%= category['id'] %>/0"><%= category['name'] %>(<%= category['count'] %>)</a><br>
+             <% else %>
+                <br><%= category['name'] %>(<%= category['count'] %>)<br>
+             <% end %>
             <%end%>
         </div>
 

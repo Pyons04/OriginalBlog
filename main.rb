@@ -8,8 +8,8 @@ require 'rails'
 markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML, autolink: true, tables: true)
 
 get '/category/:id/:page' do
-   category_id = params[:id].to_s
-   page_num = params[:page].to_s
+   category_id = params[:id].to_i
+   page_num = params[:page].to_i
 
    connection = PG::connect(:host => "localhost", :user => "postgres", :password => "takahama0613", :dbname => "blog",:port=>"5432")
    result = connection.exec("SELECT * FROM blogs")
@@ -24,31 +24,71 @@ get '/category/:id/:page' do
    end
 
 #そのカテゴリーに属する記事を取得
-   category_blog = result.select{|records| records['category_id'] == category_id}
+   category_blog = result.select{|records| records['category_id'] == category_id.to_s}
+  
+   if page_num == 0 then
 
-   @category_title = "カテゴリ: #{categories.select{|records| records['id'] == category_id}.first['category']}"
+       @category_title = "カテゴリ: #{categories.select{|records| records['id'] == category_id.to_s}.first['category']}"
 
-   @html = markdown.render(category_blog[0]['content'])
-   @title = category_blog[0]['title']
-   @date = category_blog[0]['post_date']
-   @time = category_blog[0]['post_time']
-   @id   = category_blog[0]['id']
+       @html = markdown.render(category_blog[0]['content'])
+       @title = category_blog[0]['title']
+       @date = category_blog[0]['post_date']
+       @time = category_blog[0]['post_time']
+       @id   = category_blog[0]['id']
 
-  if category_blog.length > 1 then
-   @html2 = markdown.render(category_blog[1]['content'])
-   @title2 = category_blog[1]['title']
-   @date2 = category_blog[1]['post_date']
-   @time2 = category_blog[1]['post_time']
-   @id2   = category_blog[1]['id']
-  end
+      if category_blog.length > 1 then
+       @html2 = markdown.render(category_blog[1]['content'])
+       @title2 = category_blog[1]['title']
+       @date2 = category_blog[1]['post_date']
+       @time2 = category_blog[1]['post_time']
+       @id2   = category_blog[1]['id']
+      end
 
-  if category_blog.length > 2 then
-   @html3 = markdown.render(category_blog[2]['content'])
-   @title3 = category_blog[2]['title']
-   @date3 = category_blog[2]['post_date']
-   @time3 = category_blog[2]['post_time']
-   @id3   = category_blog[2]['id']
-  end
+      if category_blog.length > 2 then
+       @html3 = markdown.render(category_blog[2]['content'])
+       @title3 = category_blog[2]['title']
+       @date3 = category_blog[2]['post_date']
+       @time3 = category_blog[2]['post_time']
+       @id3   = category_blog[2]['id']
+      end
+
+      if category_blog.length - 1> 3 then
+       @backnumber_link = true
+       @link = "/category/#{category_id}/1"
+      end
+
+   else
+    #ページネーションが1以上だった時の処理。
+       @category_title = "カテゴリ: #{categories.select{|records| records['id'] == category_id.to_s}.first['category']}"
+
+       @html = markdown.render(category_blog[3 * page_num]['content'])
+       @title = category_blog[3 * page_num]['title']
+       @date = category_blog[3 * page_num]['post_date']
+       @time = category_blog[3 * page_num]['post_time']
+       @id   = category_blog[3 * page_num]['id']
+
+      if category_blog.length - 1 > 3 * page_num  then
+       @html2 = markdown.render(category_blog[3*page_num + 1]['content'])
+       @title2 = category_blog[3 * page_num + 1]['title']
+       @date2 = category_blog[3 * page_num + 1]['post_date']
+       @time2 = category_blog[3 * page_num + 1]['post_time']
+       @id2   = category_blog[3 * page_num + 1]['id']
+      end
+
+      if category_blog.length - 1 > 3 * page_num + 2 then
+       @html3 = markdown.render(category_blog[3 * page_num + 2]['content'])
+       @title3 = category_blog[3 * page_num + 2]['title']
+       @date3 = category_blog[3 * page_num + 2]['post_date']
+       @time3 = category_blog[3 * page_num + 2]['post_time']
+       @id3   = category_blog[3 * page_num + 2]['id']
+      end
+
+      if category_blog.length - 1 > 3*page_num + 3 then
+       @backnumber_link = true
+       @link = "/category/#{category_id}/#{page_num+1}"
+      end
+
+   end
 
 erb :home
 
@@ -192,6 +232,7 @@ post '/resubmit/:id' do
      @password = params[:password]
      @title = params[:title]
      @content = params[:content]
+     @category = params[:category]
 
      if @password == "swinhiroki" then
 
@@ -199,18 +240,22 @@ post '/resubmit/:id' do
          result = connection.exec("DELETE FROM blogs WHERE id =#{id.to_i}")#パラメータのidを持つレコードを削除
 
          unless params[:delete] == "delete" then
-            result = connection.exec("INSERT INTO blogs VALUES('#{@title}','#{@content}',current_date,current_time(0),'#{id.to_i}')")#タイトルなどを入れなおして再インサート
+            result = connection.exec("INSERT INTO blogs VALUES('#{@title}','#{@content}',current_date,current_time(0),'#{id.to_i}','#{@category}')")#タイトルなどを入れなおして再インサート
             redirect'/posted'
          end
 
          redirect '/deleted'
 
      else
+       connection = PG::connect(:host => "localhost", :user => "postgres", :password => "takahama0613", :dbname => "blog",:port=>"5432")
+       @all_categories = connection.exec("SELECT * FROM categories")
+
        @incorrect_pw = true
        @edit = true  #editと新規投稿は同じhtmlを用いるので判別用にbooleanの変数をviewに送っておく。
        @html = @content
        @title = @title
        @id   = params[:id]
+       @category_id = params[:category]
        erb :post
      end
 end
@@ -248,6 +293,10 @@ post '/submit' do
          result = connection.exec("INSERT INTO blogs VALUES('#{@title}','#{@content}',current_date,current_time(0),'#{@new_id.to_i}','#{@category}')")
          redirect'/posted'
      else
+
+         connection = PG::connect(:host => "localhost", :user => "postgres", :password => "takahama0613", :dbname => "blog",:port=>"5432")
+         @all_categories = connection.exec("SELECT * FROM categories")
+
          @incorrect_pw = true
          @edit = false  #editと新規投稿は同じhtmlを用いるので判別用にbooleanの変数をviewに送っておく。
          @html = @content
