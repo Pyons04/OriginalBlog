@@ -8,8 +8,8 @@ require 'rails'
 markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML, autolink: true, tables: true)
 
 get '/category/:id/:page' do
-   category_id = params[:id]
-   page_num = params[:page]
+   category_id = params[:id].to_s
+   page_num = params[:page].to_s
 
    connection = PG::connect(:host => "localhost", :user => "postgres", :password => "takahama0613", :dbname => "blog",:port=>"5432")
    result = connection.exec("SELECT * FROM blogs")
@@ -25,6 +25,9 @@ get '/category/:id/:page' do
 
 #そのカテゴリーに属する記事を取得
    category_blog = result.select{|records| records['category_id'] == category_id}
+
+   @category_title = categories.select{|records| records['id'] == category_id}.first['category']
+   @category_title = "カテゴリ: #{@category_title}"
 
    @html = markdown.render(category_blog[0]['content'])
    @title = category_blog[0]['title']
