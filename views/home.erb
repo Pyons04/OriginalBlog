@@ -58,13 +58,20 @@
       </div>
 
       <div id="sidebar">
+
         <div id="selfintro">
-          <div class="person_img" >
-                <img src="/img/pyons.jpg" width="80" height="80" class="icon">
-          </div>
-          <br><span id="name">Pyons</span>
-          <br><div id="description">20卒私大文系エンジニア。Pascalを使ったことがある22歳。<br>Ruby歴:1年</div>
+          <div class="person_img" > <img src="/img/pyons.jpg" width="80" height="80" class="icon"> </div><br>
+          <span id="name">Pyons</span><br>
+          <div id="description">20卒私大文系エンジニア。ちょっとだけPascalが書ける22歳。<br>Ruby歴:1年</div>
         </div>
+
+        <div id="category">
+          <div id="category_title">Category<br></div>
+            <% @categories_array.each do |category|%>
+              <br><a href=""><%= category['name'] %>(<%= category['count'] %>)</a><br>
+            <%end%>
+        </div>
+
       </div>
     </main>
 

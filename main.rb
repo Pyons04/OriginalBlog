@@ -13,6 +13,16 @@ get '/oldpost/:number' do
 
     connection = PG::connect(:host => "localhost", :user => "postgres", :password => "takahama0613", :dbname => "blog",:port=>"5432")
     result = connection.exec("SELECT * FROM blogs")
+    categories = connection.exec("SELECT * FROM categories")
+
+    @categories_array = []
+
+    categories.each do |category|
+      num_blogs = result.select{|records| records['category_id'] == category['id']}.length#このカテゴリーのidをもつレコ―ドの数を数える。
+      hash = {}
+      hash = {"count" => "#{num_blogs}", "name" => "#{category['category']}"}
+      @categories_array << hash
+    end
 
      # データベースへのコネクションを切断する
      connection.finish
@@ -47,7 +57,7 @@ get '/oldpost/:number' do
 
    end
 
-end
+  end
 
 
    unless second_blog.nil? then
@@ -159,6 +169,8 @@ end
 
 get '/post' do
   @edit = false #editと新規投稿は同じhtmlを用いるので判別用にbooleanの変数をviewに送っておく。
+  connection = PG::connect(:host => "localhost", :user => "postgres", :password => "takahama0613", :dbname => "blog",:port=>"5432")
+  @all_categories = connection.exec("SELECT * FROM categories")
   erb :post
 end
 
@@ -206,7 +218,16 @@ get '/*' do
      end
 
    connection = PG::connect(:host => "localhost", :user => "postgres", :password => "takahama0613", :dbname => "blog",:port=>"5432")
+
    result = connection.exec("SELECT * FROM blogs")
+   categories = connection.exec("SELECT * FROM categories")
+
+   @categories_array = []
+
+       categories.each do |category|
+         @categories_array<<category['category']
+       end
+
 
      # データベースへのコネクションを切断する
      connection.finish
