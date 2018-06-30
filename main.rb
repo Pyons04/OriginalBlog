@@ -7,6 +7,51 @@ require 'rails'
 
 markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML, autolink: true, tables: true)
 
+get '/category/:id/:page' do
+   category_id = params[:id]
+   page_num = params[:page]
+
+   connection = PG::connect(:host => "localhost", :user => "postgres", :password => "takahama0613", :dbname => "blog",:port=>"5432")
+   result = connection.exec("SELECT * FROM blogs")
+   categories = connection.exec("SELECT * FROM categories")
+   @categories_array = []
+
+   categories.each do |category|
+      num_blogs = result.select{|records| records['category_id'] == category['id']}.length#このカテゴリーのidをもつレコ―ドの数を数える。
+      hash = {}
+      hash = {"count" => "#{num_blogs}", "name" => "#{category['category']}"}
+      @categories_array << hash
+   end
+
+#そのカテゴリーに属する記事を取得
+   category_blog = result.select{|records| records['category_id'] == category_id}
+
+   @html = markdown.render(category_blog[0]['content'])
+   @title = category_blog[0]['title']
+   @date = category_blog[0]['post_date']
+   @time = category_blog[0]['post_time']
+   @id   = category_blog[0]['id']
+
+  if category_blog.length > 1 then
+   @html2 = markdown.render(category_blog[1]['content'])
+   @title2 = category_blog[1]['title']
+   @date2 = category_blog[1]['post_date']
+   @time2 = category_blog[1]['post_time']
+   @id2   = category_blog[1]['id']
+  end
+
+  if category_blog.length > 2 then
+   @html3 = markdown.render(category_blog[2]['content'])
+   @title3 = category_blog[2]['title']
+   @date3 = category_blog[2]['post_date']
+   @time3 = category_blog[2]['post_time']
+   @id3   = category_blog[2]['id']
+  end
+
+erb :home
+
+end
+
 
 get '/oldpost/:number' do
 
@@ -28,9 +73,11 @@ get '/oldpost/:number' do
      connection.finish
 
      ids = []
+
      result.each do |record|
-     ids<<record['id'].to_i
+        ids<<record['id'].to_i
      end
+
      smallest_id = ids.min
 
      latest_id = params[:number].to_i #urlに組み込んだパラメータが次のページの最初の記事のidになっている。
@@ -222,11 +269,14 @@ get '/*' do
    result = connection.exec("SELECT * FROM blogs")
    categories = connection.exec("SELECT * FROM categories")
 
-   @categories_array = []
 
-       categories.each do |category|
-         @categories_array<<category['category']
-       end
+   @categories_array = []
+   categories.each do |category|
+      num_blogs = result.select{|records| records['category_id'] == category['id']}.length#このカテゴリーのidをもつレコ―ドの数を数える。
+      hash = {}
+      hash = {"count" => "#{num_blogs}", "name" => "#{category['category']}"}
+      @categories_array << hash
+   end
 
 
      # データベースへのコネクションを切断する
