@@ -19,15 +19,14 @@ get '/category/:id/:page' do
    categories.each do |category|
       num_blogs = result.select{|records| records['category_id'] == category['id']}.length#このカテゴリーのidをもつレコ―ドの数を数える。
       hash = {}
-      hash = {"count" => "#{num_blogs}", "name" => "#{category['category']}"}
+      hash = {"count" => "#{num_blogs}", "name" => "#{category['category']}","id" => "#{category['id']}"}
       @categories_array << hash
    end
 
 #そのカテゴリーに属する記事を取得
    category_blog = result.select{|records| records['category_id'] == category_id}
 
-   @category_title = categories.select{|records| records['id'] == category_id}.first['category']
-   @category_title = "カテゴリ: #{@category_title}"
+   @category_title = "カテゴリ: #{categories.select{|records| records['id'] == category_id}.first['category']}"
 
    @html = markdown.render(category_blog[0]['content'])
    @title = category_blog[0]['title']
@@ -68,7 +67,7 @@ get '/oldpost/:number' do
     categories.each do |category|
       num_blogs = result.select{|records| records['category_id'] == category['id']}.length#このカテゴリーのidをもつレコ―ドの数を数える。
       hash = {}
-      hash = {"count" => "#{num_blogs}", "name" => "#{category['category']}"}
+      hash = {"count" => "#{num_blogs}", "name" => "#{category['category']}","id" => "#{category['id']}"}
       @categories_array << hash
     end
 
@@ -277,7 +276,7 @@ get '/*' do
    categories.each do |category|
       num_blogs = result.select{|records| records['category_id'] == category['id']}.length#このカテゴリーのidをもつレコ―ドの数を数える。
       hash = {}
-      hash = {"count" => "#{num_blogs}", "name" => "#{category['category']}"}
+      hash = {"count" => "#{num_blogs}", "name" => "#{category['category']}","id" => "#{category['id']}"}
       @categories_array << hash
    end
 
