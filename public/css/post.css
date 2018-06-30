@@ -44,3 +44,7 @@ h3{
 .btn-danger{
   float:left;
 }
+
+#exampleFormControlSelect2{
+  width: 35%;
+}

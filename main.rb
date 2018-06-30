@@ -105,8 +105,10 @@ get '/edit/:id' do
 
   id = params[:id]
 
-  connection = PG::connect(:host => "localhost", :user => "postgres", :password => "takahama0613", :dbname => "blog",:port=>"5432")
+   connection = PG::connect(:host => "localhost", :user => "postgres", :password => "takahama0613", :dbname => "blog",:port=>"5432")
    result = connection.exec("SELECT * FROM blogs")
+
+   @all_categories = connection.exec("SELECT * FROM categories")
 
      # データベースへのコネクションを切断する
    connection.finish
@@ -118,6 +120,7 @@ get '/edit/:id' do
    @date = edit_blog['post_date']
    @time = edit_blog['post_time']
    @id   = edit_blog['id']
+   @category_id = edit_blog['category_id']
 
    erb :post
 end
@@ -164,6 +167,7 @@ post '/submit' do
      @password = params[:password]
      @title = params[:title]
      @content = params[:content]
+     @category = params[:category]
 
      if @password == "swinhiroki" then
 
@@ -180,7 +184,7 @@ post '/submit' do
          @new_id = latest_id+1
 
 
-         result = connection.exec("INSERT INTO blogs VALUES('#{@title}','#{@content}',current_date,current_time(0),'#{@new_id.to_i}')")
+         result = connection.exec("INSERT INTO blogs VALUES('#{@title}','#{@content}',current_date,current_time(0),'#{@new_id.to_i}','#{@category}')")
          redirect'/posted'
      else
          @incorrect_pw = true

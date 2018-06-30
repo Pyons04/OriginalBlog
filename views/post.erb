@@ -47,11 +47,11 @@
 
        <label for="exampleFormControlSelect2">Category</label>
          <select multiple class="form-control" id="exampleFormControlSelect2" name="category">
-           <option value="未分類">1</option>
-           <option value="Ruby">2</option>
-           <option value="Rails">3</option>
-           <option value="Java">4</option>
-           <option value="Golang">5</option>
+
+          <% @all_categories.each do |element| %>
+           <option value="<%= element['id'] %>"><%= element['category'] %></option>
+          <% end %>
+
          </select>
 
 
@@ -73,13 +73,14 @@
     <%if @incorrect_pw == true  %>
          <script>window.alert('不正なパスワードが入力されています。');</script>
     <% end %>
-    <%if @edit == true  %>
-         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
+          <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
           <script>
-            console.log('default selected');
-           $('select[name=category]').val("Java");
-         </script>
-    <% end %>
+            <%if @edit == true  %>
+               $('select[name=category]').val("<%= @category_id %>");
+            <%elsif @edit == false  %>
+               $('select[name=category]').val("0");
+            <% end %>
+          </script>
    </body>
 
 </html>
