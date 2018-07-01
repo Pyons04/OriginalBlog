@@ -274,8 +274,13 @@ post '/submit' do
      @title = params[:title]
      @content = params[:content]
      @category = params[:category]
+     @image      = params[:img]
 
      if @password == "swinhiroki" then
+
+          open("/public/img/", 'wb') do |file|
+            file.puts(@image)
+          end
 
          connection = PG::connect(:host => "localhost", :user => "postgres", :password => "takahama0613", :dbname => "blog",:port=>"5432")
          result = connection.exec("SELECT * FROM blogs")
