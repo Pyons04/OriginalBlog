@@ -3,7 +3,7 @@ require 'pg'
 require 'redcarpet'
 require 'pry'
 require 'rails'
-
+require 'carrierwave'
 
 markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML, autolink: true, tables: true)
 
@@ -274,13 +274,14 @@ post '/submit' do
      @title = params[:title]
      @content = params[:content]
      @category = params[:category]
-     @image      = params[:img]
 
      if @password == "swinhiroki" then
 
-          open("/public/img/", 'wb') do |file|
-            file.puts(@image)
-          end
+         if params[:img]
+           file = params[:img][:tempfile]
+           image = Image.new(name: "hello.jpg", data: file.read(file.length))
+           image.save
+         end
 
          connection = PG::connect(:host => "localhost", :user => "postgres", :password => "takahama0613", :dbname => "blog",:port=>"5432")
          result = connection.exec("SELECT * FROM blogs")
