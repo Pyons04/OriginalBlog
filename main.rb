@@ -7,6 +7,25 @@ require 'carrierwave'
 
 markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML, autolink: true, tables: true)
 
+
+post '/comment/:id' do
+   post_id = params[:id].to_i
+   comment = params[:comment]
+   user = params[:user]
+   connection = PG::connect(:host => "localhost", :user => "postgres", :password => "takahama0613", :dbname => "blog",:port=>"5432")
+   result = connection.exec("SELECT * FROM comments")
+
+         ids = []
+         result.each do |record|
+           ids<<record['id'].to_i
+         end
+
+         new_id = ids.max + 1
+
+         result = connection.exec("INSERT INTO comments VALUES('#{post_id}','#{comment}','#{user}',current_time(0),current_date,'#{new_id}')")
+         redirect'/posted'
+end
+
 get '/category/:id/:page' do
    category_id = params[:id].to_i
    page_num = params[:page].to_i

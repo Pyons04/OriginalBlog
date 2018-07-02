@@ -117,12 +117,19 @@ h1{
   transition: 0.8s;
 }
 
+#comment_post > input {
+    display: none;
+}
+
 #comment_post input:checked ~ #comment_form{
     height: auto;
     opacity: 1;
 }
 
-
+.btn {
+  float:right;
+  margin-right:70px;
+}
 
 #sidebar{
   float:right;
