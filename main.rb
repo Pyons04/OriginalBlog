@@ -277,12 +277,6 @@ post '/submit' do
 
      if @password == "swinhiroki" then
 
-         if params[:img]
-           file = params[:img][:tempfile]
-           image = Image.new(name: "hello.jpg", data: file.read(file.length))
-           image.save
-         end
-
          connection = PG::connect(:host => "localhost", :user => "postgres", :password => "takahama0613", :dbname => "blog",:port=>"5432")
          result = connection.exec("SELECT * FROM blogs")
 

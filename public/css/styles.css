@@ -105,6 +105,25 @@ h1{
    margin-right: 20px;
 }
 
+#comment_post{
+   margin-right: 20px;
+   text-align: right;
+}
+
+#comment_form{
+  text-align: center;
+  height: 0;
+  opacity: 0;
+  transition: 0.8s;
+}
+
+#comment_post input:checked ~ #comment_form{
+    height: auto;
+    opacity: 1;
+}
+
+
+
 #sidebar{
   float:right;
   background-color: white;

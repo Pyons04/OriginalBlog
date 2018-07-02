@@ -45,6 +45,18 @@ h3{
   float:left;
 }
 
+#settings{
+  overflow: hidden;
+  display: flex;
+}
+
+
 #exampleFormControlSelect2{
-  width: 35%;
+  width: 40%;
+  float:left;
+}
+
+#exampleFormControlFile1{
+  float: right;
+  margin-left:300px;
 }

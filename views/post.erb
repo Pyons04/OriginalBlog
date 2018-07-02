@@ -4,7 +4,7 @@
     <title>備忘録/Post</title>
     <link rel="stylesheet" href="/css/normalize.css">
     <link rel="stylesheet" href="/css/post.css">
-     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
    </head>
 
    <body>
@@ -45,17 +45,18 @@
         <% end %>
        </div>
 
-       <label for="exampleFormControlSelect2">Category</label>
+       <div id="settings">
+
          <select multiple class="form-control" id="exampleFormControlSelect2" name="category">
 
-          <% @all_categories.each do |element| %>
-           <option value="<%= element['id'] %>"><%= element['category'] %></option>
-          <% end %>
+            <% @all_categories.each do |element| %>
+            <option value="<%= element['id'] %>"><%= element['category'] %></option>
+            <% end %>
 
          </select>
 
-       <div class="form-group">
-          <input type="file" class="form-control-file" id="exampleFormControlFile1" name="img">
+            <input type="file" class="form-control-file" id="exampleFormControlFile1" name="img">
+
        </div>
 
 
