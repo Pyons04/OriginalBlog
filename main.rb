@@ -354,7 +354,6 @@ get '/*' do
 
 
      # データベースへのコネクションを切断する
-     connection.finish
 
      ids = []
      result.each do |record|
@@ -369,6 +368,13 @@ get '/*' do
      @date = latest_blog['post_date']
      @time = latest_blog['post_time']
      @id   = latest_blog['id']
+
+     comments = connection.exec("SELECT * FROM comments")
+     latest_comments = comments.select{|records| records['post_id'] == latest_id.to_s}
+
+     connection.finish
+
+     @comments = latest_comments
 
      second_id = latest_id - 1 #なぜかlatest_idがstringになってしまっているため、Integerに戻さないと計算できない。（バグ）
      second_blog = result.select{|records| records['id'] == second_id.to_s}.first

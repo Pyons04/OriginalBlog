@@ -53,9 +53,11 @@
            </div>
 
            <div class="show_comments">
-              コメント( )<br>
+              コメント(<%= @comments.length %>)<br>
               <ul>
-                <li>テストコメント <br>投稿者：Pyons 投稿日時:2018-07-02 18:12:04</li>
+                <% @comments.each do |post| %>
+                <li><%= post['comment']%><br><span id="detail">投稿者：<%= post['user']%> 投稿日時:<%= post['post_date']%> <%= post['post_time']%></span></li>
+                <% end %>
               </ul>
            </div>
 
