@@ -53,10 +53,16 @@
            </div>
 
            <div class="show_comments">
-              コメント(<%= @comments.length %>)<br>
+              <% unless @comments.nil?%>
+                 コメント(<%= @comments.length%>)<br>
+              <% else %>
+                 コメント(0)<br>
+              <% end %>
               <ul>
-                <% @comments.each do |post| %>
-                <li><%= post['comment']%><br><span id="detail">投稿者：<%= post['user']%> 投稿日時:<%= post['post_date']%> <%= post['post_time']%></span></li>
+                <% unless @comments.nil? %>
+                 <% @comments.each do |post| %>
+                   <li><%= post['comment']%><br><span id="detail">投稿者：<%= post['user']%> 投稿日時:<%= post['post_date']%> <%= post['post_time']%></span></li>
+                 <% end %>
                 <% end %>
               </ul>
            </div>
@@ -75,8 +81,37 @@
            <%= @html2 %>
 
           <% unless @html2.nil? %>
-           <div id="time">Posted Time <%= @time2 %><br>コメントを書く</div>
+           <div id="time">Posted Time <%= @time2 %></div>
           <% end %>
+
+           <div id="comment_post">
+            <label for="label2">コメントを書く</label><input type="checkbox" id="label2"/>
+              <div id="comment_form">
+                 <div class="form-group">
+                      <form action="/comment/<%= @id2 %>" method="POST" enctype="multipart/form-data">
+                          <input type="user" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="投稿者名" name="user"><br>
+                          <textarea class="form-control" id="exampleFormControlTextarea1" rows="2" name="comment" placeholder="コメント"></textarea><br>
+                          <button type="submit" class="btn btn-info">送信</button>
+                      </form>
+                 </div>
+              </div>
+           </div>
+
+           <div class="show_comments">
+              <% unless @comments2.nil?%>
+                 コメント(<%= @comments2.length %>)<br>
+              <% else %>
+                 コメント(0)<br>
+              <% end %>
+                <% unless @comments2.nil? %>
+                  <% @comments2.each do |post| %>
+                    <li><%= post['comment']%><br><span id="detail">投稿者：<%= post['user']%> 投稿日時:<%= post['post_date']%> <%= post['post_time']%></span></li>
+                  <% end %>
+                <% end %>
+              </ul>
+           </div>
+
+
         </div>
 
 
@@ -92,8 +127,38 @@
           <%= @html3 %>
 
           <% unless @html3.nil? %>
-             <div id="time">Posted Time <%= @time3 %><br>コメントを書く</div>
+             <div id="time">Posted Time <%= @time3 %></div>
           <% end %>
+
+           <div id="comment_post">
+            <label for="label2">コメントを書く</label><input type="checkbox" id="label2"/>
+              <div id="comment_form">
+                 <div class="form-group">
+                      <form action="/comment/<%= @id3 %>" method="POST" enctype="multipart/form-data">
+                          <input type="user" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="投稿者名" name="user"><br>
+                          <textarea class="form-control" id="exampleFormControlTextarea1" rows="2" name="comment" placeholder="コメント"></textarea><br>
+                          <button type="submit" class="btn btn-info">送信</button>
+                      </form>
+                 </div>
+              </div>
+           </div>
+
+           <div class="show_comments">
+              <% unless @comments3.nil?%>
+                 コメント(<%= @comments3.length %>)<br>
+              <% else %>
+                 コメント(0)<br>
+              <% end %>
+
+              <ul>
+                <% unless @comments3.nil? %>
+                  <% @comments3.each do |post| %>
+                     <li><%= post['comment']%><br><span id="detail">投稿者：<%= post['user']%> 投稿日時:<%= post['post_date']%> <%= post['post_time']%></span></li>
+                  <% end %>
+                <% end %>
+              </ul>
+           </div>
+
         </div>
 
         <% if @backnumber_link == true %>
