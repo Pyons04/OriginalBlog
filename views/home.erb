@@ -84,10 +84,10 @@
            <div id="time">Posted Time <%= @time2 %></div>
           <% end %>
 
-           <div id="comment_post">
-            <label for="label2">コメントを書く</label><input type="checkbox" id="label2"/>
-              <div id="comment_form">
-                 <div class="form-group">
+           <div id="comment_post2">
+            <label for="label3">コメントを書く</label><input type="checkbox" id="label3"/>
+              <div id="comment_form2">
+                 <div class="form-group" id="2">
                       <form action="/comment/<%= @id2 %>" method="POST" enctype="multipart/form-data">
                           <input type="user" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="投稿者名" name="user"><br>
                           <textarea class="form-control" id="exampleFormControlTextarea1" rows="2" name="comment" placeholder="コメント"></textarea><br>
@@ -130,9 +130,9 @@
              <div id="time">Posted Time <%= @time3 %></div>
           <% end %>
 
-           <div id="comment_post">
-            <label for="label2">コメントを書く</label><input type="checkbox" id="label2"/>
-              <div id="comment_form">
+           <div id="comment_post3">
+            <label for="label3">コメントを書く</label><input type="checkbox" id="label3"/>
+              <div id="comment_form3">
                  <div class="form-group">
                       <form action="/comment/<%= @id3 %>" method="POST" enctype="multipart/form-data">
                           <input type="user" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="投稿者名" name="user"><br>

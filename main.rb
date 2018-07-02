@@ -372,8 +372,6 @@ get '/*' do
      comments = connection.exec("SELECT * FROM comments")
      latest_comments = comments.select{|records| records['post_id'] == latest_id.to_s}
 
-     connection.finish
-
      @comments = latest_comments
 
      second_id = latest_id - 1 #なぜかlatest_idがstringになってしまっているため、Integerに戻さないと計算できない。（バグ）
@@ -391,7 +389,14 @@ get '/*' do
      @date2 = second_blog['post_date']
      @time2 = second_blog['post_time']
      @id2   = second_blog['id']
+
+     comments2 = connection.exec("SELECT * FROM comments")
+     second_comments = comments2.select{|records| records['post_id'] == second_id.to_s}
+
+     @comments2 = second_comments
    end
+
+
 
 
      third_id = second_id - 1
@@ -408,6 +413,11 @@ get '/*' do
      @date3 = third_blog['post_date']
      @time3 = third_blog['post_time']
      @id3   = third_blog['id']
+
+     comments3 = connection.exec("SELECT * FROM comments")
+     third_comments = comments3.select{|records| records['post_id'] == third_id.to_s}
+
+     @comments3 = third_comments
    end
 
    fourth_id = third_id - 1
@@ -425,5 +435,6 @@ get '/*' do
         @link = "/oldpost/#{fourth_id}"
     end
 
+    connection.finish
     erb :home
 end
