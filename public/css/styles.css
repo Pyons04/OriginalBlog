@@ -115,6 +115,19 @@ h1{
   height: 0;
   opacity: 0;
   transition: 0.8s;
+  border-color: gray;
+  border-style: solid;
+  border-width: 0.5px;
+  padding:20px;]
+  overflow: hidden;
+}
+
+#comment_post > label{
+  color: #47a89c
+}
+
+#comment_post > label:hover{
+  color: red;
 }
 
 #comment_post > input {
@@ -124,11 +137,6 @@ h1{
 #comment_post input:checked ~ #comment_form{
     height: auto;
     opacity: 1;
-}
-
-.btn {
-  float:right;
-  margin-right:70px;
 }
 
 #sidebar{

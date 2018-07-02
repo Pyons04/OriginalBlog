@@ -15,15 +15,19 @@ post '/comment/:id' do
    connection = PG::connect(:host => "localhost", :user => "postgres", :password => "takahama0613", :dbname => "blog",:port=>"5432")
    result = connection.exec("SELECT * FROM comments")
 
-         ids = []
-         result.each do |record|
-           ids<<record['id'].to_i
-         end
+   ids = []
+   result.each do |record|
+     ids<<record['id'].to_i
+   end
 
-         new_id = ids.max + 1
+   new_id = ids.max + 1
 
+   unless comment.nil? and user.nil?
          result = connection.exec("INSERT INTO comments VALUES('#{post_id}','#{comment}','#{user}',current_time(0),current_date,'#{new_id}')")
          redirect'/posted'
+   else
+         redirect'/'#フォームの入力が完全でない場合redirect先のフォームに入れておいた文字をパラメータに渡す。
+   end
 end
 
 get '/category/:id/:page' do
