@@ -2,15 +2,23 @@ require 'sinatra'
 require 'pg'
 require 'redcarpet'
 require 'pry'
+require 'dotenv'
 
 markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML, autolink: true, tables: true)
+Dotenv.load
+correct_pw = ENV["password"]
+db_host    = ENV["db_host"]
+db_user    = ENV["db_user"]
+db_pw      = ENV["db_pw"]
+db_name    = ENV["db_name"]
+db_port    = ENV["db_port"].to_i
 
 
 post '/comment/:id' do
    post_id = params[:id].to_i
    comment = params[:comment]
    user = params[:user]
-   connection = PG::connect(:host => "localhost", :user => "postgres", :password => "takahama0613", :dbname => "blog",:port=>"5432")
+   connection = PG::connect(:host => "#{db_host}", :user => "#{db_user}", :password => "#{db_pw}", :dbname => "#{db_name}",:port=>"#{db_port}")
    result = connection.exec("SELECT * FROM comments")
 
    ids = []
@@ -18,7 +26,11 @@ post '/comment/:id' do
      ids<<record['id'].to_i
    end
 
-   new_id = ids.max + 1
+   if ids.length == 0 then
+    new_id = 0#初コメントの場合
+   else
+    new_id = ids.max + 1
+   end
 
    unless comment.nil? and user.nil?
          result = connection.exec("INSERT INTO comments VALUES('#{post_id}','#{comment}','#{user}',current_time(0),current_date,'#{new_id}')")
@@ -32,7 +44,7 @@ get '/category/:id/:page' do
    category_id = params[:id].to_i
    page_num = params[:page].to_i
 
-   connection = PG::connect(:host => "localhost", :user => "postgres", :password => "takahama0613", :dbname => "blog",:port=>"5432")
+   connection = PG::connect(:host => "#{db_host}", :user => "#{db_user}", :password => "#{db_pw}", :dbname => "#{db_name}",:port=>"#{db_port}")
    result = connection.exec("SELECT * FROM blogs ORDER BY id DESC")
    categories = connection.exec("SELECT * FROM categories")
    @categories_array = []
@@ -99,7 +111,7 @@ get '/oldpost/:number' do
 
     page_num = params[:number].to_i
 
-    connection = PG::connect(:host => "localhost", :user => "postgres", :password => "takahama0613", :dbname => "blog",:port=>"5432")
+    connection = PG::connect(:host => "#{db_host}", :user => "#{db_user}", :password => "#{db_pw}", :dbname => "#{db_name}",:port=>"#{db_port}")
     result = connection.exec("SELECT * FROM blogs ORDER BY id DESC")
     categories = connection.exec("SELECT * FROM categories")
 
@@ -165,7 +177,7 @@ get '/edit/:id' do
 
   id = params[:id]
 
-   connection = PG::connect(:host => "localhost", :user => "postgres", :password => "takahama0613", :dbname => "blog",:port=>"5432")
+   connection = PG::connect(:host => "#{db_host}", :user => "#{db_user}", :password => "#{db_pw}", :dbname => "#{db_name}",:port=>"#{db_port}")
    result = connection.exec("SELECT * FROM blogs ORDER BY id DESC")
 
    @all_categories = connection.exec("SELECT * FROM categories")
@@ -195,14 +207,17 @@ post '/resubmit/:id' do
      @content = params[:content]
      @category = params[:category]
 
-     if @password == "swinhiroki" then
+     if @password == correct_pw then
 
-         connection = PG::connect(:host => "localhost", :user => "postgres", :password => "takahama0613", :dbname => "blog",:port=>"5432")
+         connection = PG::connect(:host => "#{db_host}", :user => "#{db_user}", :password => "#{db_pw}", :dbname => "#{db_name}",:port=>"#{db_port}")
          result = connection.exec("DELETE FROM blogs WHERE id =#{id.to_i}")#パラメータのidを持つレコードを削除
 
          unless params[:delete] == "delete" then
             result = connection.exec("INSERT INTO blogs VALUES('#{@title}','#{@content}',current_date,current_time(0),'#{id.to_i}','#{@category}')")#タイトルなどを入れなおして再インサート
             redirect'/posted'
+
+         else
+            result = connection.exec("DELETE FROM comments WHERE post_id =#{id.to_i}")
          end
 
          redirect '/deleted'
@@ -224,7 +239,7 @@ end
 
 get '/post' do
   @edit = false #editと新規投稿は同じhtmlを用いるので判別用にbooleanの変数をviewに送っておく。
-  connection = PG::connect(:host => "localhost", :user => "postgres", :password => "takahama0613", :dbname => "blog",:port=>"5432")
+  connection = PG::connect(:host => "#{db_host}", :user => "#{db_user}", :password => "#{db_pw}", :dbname => "#{db_name}",:port=>"#{db_port}")
   @all_categories = connection.exec("SELECT * FROM categories")
   erb :post
 end
@@ -240,9 +255,9 @@ post '/submit' do
      image_file = @image[:tempfile]
      image_name = @image[:filename]
 
-     if @password == "swinhiroki" then
+     if @password == correct_pw then
 
-         connection = PG::connect(:host => "localhost", :user => "postgres", :password => "takahama0613", :dbname => "blog",:port=>"5432")
+         connection = PG::connect(:host => "#{db_host}", :user => "#{db_user}", :password => "#{db_pw}", :dbname => "#{db_name}",:port=>"#{db_port}")
          result = connection.exec("SELECT * FROM blogs")
 
          # データベースへのコネクションを切断する
@@ -275,7 +290,7 @@ post '/submit' do
          redirect'/posted'
      else
 
-         connection = PG::connect(:host => "localhost", :user => "postgres", :password => "takahama0613", :dbname => "blog",:port=>"5432")
+         connection = PG::connect(:host => "#{db_host}", :user => "#{db_user}", :password => "#{db_pw}", :dbname => "#{db_name}",:port=>"#{db_port}")
          @all_categories = connection.exec("SELECT * FROM categories")
 
          @incorrect_pw = true
@@ -296,7 +311,7 @@ get '/*' do
        @status = "deleted"
      end
 
-   connection = PG::connect(:host => "localhost", :user => "postgres", :password => "takahama0613", :dbname => "blog",:port=>"5432")
+   connection = PG::connect(:host => "#{db_host}", :user => "#{db_user}", :password => "#{db_pw}", :dbname => "#{db_name}",:port=>"#{db_port}")
 
    result = connection.exec("SELECT * FROM blogs ORDER BY id DESC")
    categories = connection.exec("SELECT * FROM categories")

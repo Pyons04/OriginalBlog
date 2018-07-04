@@ -50,6 +50,7 @@ GEM
       mime-types (>= 1.16)
     concurrent-ruby (1.0.5)
     crass (1.0.4)
+    dotenv (2.5.0)
     erubi (1.7.1)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
@@ -132,6 +133,7 @@ PLATFORMS
 
 DEPENDENCIES
   carrierwave
+  dotenv
   pg
   rails
   redcarpet
