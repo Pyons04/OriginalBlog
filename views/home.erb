@@ -162,7 +162,11 @@
         </div>
 
         <% if @backnumber_link == true %>
-           <center> <a href="<%= @link %>">次のページ </a></center>
+           <center> <a href="<%= @link %>">次のページ</a></center><br>
+        <% end %>
+
+        <% unless @fowerd_link.nil? %>
+           <center> <a href="<%= @fowerd_link %>">前のページ</a></center><br>
         <% end %>
 
       </div>
@@ -190,7 +194,7 @@
     </main>
 
    <footer>
-     footer
+     <center>CopyRight 2018 Hiroki Sueda All Right Reserved.</center>
    </footer>
 
    <%if @status == "cancel"  %>

@@ -73,6 +73,10 @@ h1{
   padding:20px;
 }
 
+p > img{
+  width:630px;
+}
+
 #button{
   float:right;
 }

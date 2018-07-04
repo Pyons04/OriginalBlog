@@ -2,8 +2,6 @@ require 'sinatra'
 require 'pg'
 require 'redcarpet'
 require 'pry'
-require 'rails'
-require 'carrierwave'
 
 markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML, autolink: true, tables: true)
 
@@ -87,6 +85,10 @@ get '/category/:id/:page' do
        @link = "/category/#{category_id}/#{page_num+1}"
       end
 
+      if page_num > 0 then
+        @fowerd_link = "/oldpost/#{page_num-1}"
+      end
+
 connection.finish
 erb :home
 
@@ -147,6 +149,10 @@ get '/oldpost/:number' do
       if ids.length - 1 > 3*page_num + 3 then
        @backnumber_link = true
        @link = "/oldpost/#{page_num+1}"
+      end
+
+      if page_num > 0 then
+        @fowerd_link = "/oldpost/#{page_num-1}"
       end
 
     connection.finish
@@ -229,6 +235,10 @@ post '/submit' do
      @title = params[:title]
      @content = params[:content]
      @category = params[:category]
+     @image    = params[:image]
+
+     image_file = @image[:tempfile]
+     image_name = @image[:filename]
 
      if @password == "swinhiroki" then
 
@@ -241,9 +251,25 @@ post '/submit' do
            ids<<record['id'].to_i
          end
 
-         latest_id = ids.max
-         @new_id = latest_id+1
+         if ids.length == 0 then#この投稿が最初の投稿だった場合。
+           @new_id = 0
+         else
+           latest_id = ids.max
+           @new_id = latest_id+1
+         end
 
+         #画像の保存プロセス/ここから
+         dirPath = "./public/img/#{@new_id}/"
+         FileUtils.mkdir_p(dirPath) unless FileTest.exist?(dirPath)
+
+         filePath = "./public/img/#{@new_id}/#{image_name}"
+         open(filePath, 'w+b') do |output|
+             output.write(image_file.read)
+         end
+         #画像の保存プロセス/ここまで
+
+         #送信されたmarkdownの[image1]を実際の画像へのファイルパスに置き換える。
+         @content.sub!("[image1]", "![image1](/img/#{@new_id}/#{image_name})")
 
          result = connection.exec("INSERT INTO blogs VALUES('#{@title}','#{@content}',current_date,current_time(0),'#{@new_id.to_i}','#{@category}')")
          redirect'/posted'
@@ -284,8 +310,17 @@ get '/*' do
       @categories_array << hash
    end
 
-       page_num = 0
+        page_num = 0
 
+      ids = []
+
+      unless result.nil?
+        result.each do |record|
+          ids<<record['id'].to_i
+        end
+      end
+
+      unless ids.length == 0 then
        @html = markdown.render(result[3 * page_num]['content'])
        @title = result[3 * page_num]['title']
        @date = result[3 * page_num]['post_date']
@@ -293,11 +328,7 @@ get '/*' do
        @id   = result[3 * page_num]['id']
        comments_all = connection.exec("SELECT * FROM comments")
        @comments = comments_all.select{|records| records['post_id'] == @id.to_s}
-
-        ids = []
-        result.each do |record|
-          ids<<record['id'].to_i
-        end
+      end
 
 
       if ids.length - 1 > 3 * page_num  then   #result.lengthが使えないので、代わりにidの個数を長さとして扱う
@@ -324,6 +355,11 @@ get '/*' do
        @backnumber_link = true
        @link = "/oldpost/#{page_num+1}"
       end
+
+     if page_num > 0 then
+        @fowerd_link = "/oldpost/#{page_num-1}"
+     end
+
 
     connection.finish
     erb :home
