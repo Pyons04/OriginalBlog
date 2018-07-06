@@ -61,7 +61,7 @@
               <ul>
                 <% unless @comments.nil? %>
                  <% @comments.each do |post| %>
-                   <li><%= post['comment']%><br><span id="detail">投稿者：<%= post['user']%> 投稿日時:<%= post['post_date']%> <%= post['post_time']%></span></li>
+                   <li><%= post['comment']%><br><span id="detail">投稿者：<%= post['user_name']%> 投稿日時:<%= post['post_date']%> <%= post['post_time']%></span></li>
                  <% end %>
                 <% end %>
               </ul>
@@ -105,7 +105,7 @@
               <% end %>
                 <% unless @comments2.nil? %>
                   <% @comments2.each do |post| %>
-                    <li><%= post['comment']%><br><span id="detail">投稿者：<%= post['user']%> 投稿日時:<%= post['post_date']%> <%= post['post_time']%></span></li>
+                    <li><%= post['comment']%><br><span id="detail">投稿者：<%= post['user_name']%> 投稿日時:<%= post['post_date']%> <%= post['post_time']%></span></li>
                   <% end %>
                 <% end %>
               </ul>
@@ -153,7 +153,7 @@
               <ul>
                 <% unless @comments3.nil? %>
                   <% @comments3.each do |post| %>
-                     <li><%= post['comment']%><br><span id="detail">投稿者：<%= post['user']%> 投稿日時:<%= post['post_date']%> <%= post['post_time']%></span></li>
+                     <li><%= post['comment']%><br><span id="detail">投稿者：<%= post['user_name']%> 投稿日時:<%= post['post_date']%> <%= post['post_time']%></span></li>
                   <% end %>
                 <% end %>
               </ul>
