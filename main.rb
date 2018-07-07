@@ -1,8 +1,10 @@
-require 'sinatra'
+require 'sinatra/base'
 require 'pg'
 require 'redcarpet'
 require 'pry'
 require 'dotenv'
+
+class MyApp < Sinatra::Base
 
 markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML, autolink: true, tables: true)
 Dotenv.load
@@ -252,8 +254,8 @@ post '/submit' do
      @category = params[:category]
      @image    = params[:image]
 
-     image_file = @image[:tempfile]
-     image_name = @image[:filename]
+     image_file = @image[:tempfile] unless @image.nil?
+     image_name = @image[:filename] unless @image.nil?
 
      if @password == correct_pw then
 
@@ -274,12 +276,14 @@ post '/submit' do
          end
 
          #画像の保存プロセス/ここから
-         dirPath = "./public/img/#{@new_id}/"
-         FileUtils.mkdir_p(dirPath) unless FileTest.exist?(dirPath)
+         unless @image.nil?
+           dirPath = "./public/img/#{@new_id}/"
+           FileUtils.mkdir_p(dirPath) unless FileTest.exist?(dirPath)
 
-         filePath = "./public/img/#{@new_id}/#{image_name}"
-         open(filePath, 'w+b') do |output|
-             output.write(image_file.read)
+           filePath = "./public/img/#{@new_id}/#{image_name}"
+           open(filePath, 'w+b') do |output|
+              output.write(image_file.read)
+           end
          end
          #画像の保存プロセス/ここまで
 
@@ -380,3 +384,5 @@ get '/*' do
     erb :home
 
 end
+
+end#classのend

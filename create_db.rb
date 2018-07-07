@@ -37,8 +37,6 @@ result3 = connection.exec("CREATE TABLE comments (
     id               integer
 );")
 
-userカラムの作成の際に謎のエラー発生中。
-
 
 result5 = connection.exec("INSERT INTO categories VALUES('1','Ruby');")
 result6 = connection.exec("INSERT INTO categories VALUES('2','GoLang');")
